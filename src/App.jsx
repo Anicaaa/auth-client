@@ -11,8 +11,19 @@ export default function App() {
     const register = async (e) => {
         e.preventDefault();
         // Write your register code here
-
-
+        const opts = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user),
+        }
+        fetch(`http://localhost:4000/register`, opts)
+        .then((res) => res.json())
+        .then((userData) => {
+            console.log("LOOK HERE:", userData)
+            setRegisterResponse(
+                `Thank you ${userData.data.username}. You have successfully registered.`
+            )
+        })
     };
 
     const login = async (e) => {
