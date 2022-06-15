@@ -5,6 +5,7 @@ import Input from './components/Input';
 
 export default function App() {
     const [user, setUser] = useState({ username: '', password: '' });
+    const [loginUser, loginSetUser] = useState({ username: '', password: '' });
     const [registerResponse, setRegisterResponse] = useState('');
     const [loginResponse, setLoginResponse] = useState('');
 
@@ -16,7 +17,7 @@ export default function App() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(user),
         }
-        fetch(`http://localhost:4000/register`, opts)
+        await fetch(`http://localhost:4000/register`, opts)
         .then((res) => res.json())
         .then((userData) => {
             console.log("LOOK HERE:", userData)
@@ -28,10 +29,22 @@ export default function App() {
 
     const login = async (e) => {
         e.preventDefault();
-        // Write your login code here
-
-        
+        // Write your register code here
+        const opts = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(loginUser),
+        }
+        await fetch(`http://localhost:4000/login`, opts)
+        .then((res) => res.json())
+        .then((userDataLogin) => {
+            console.log("LOOK HERE:", userDataLogin)
+            setLoginResponse(
+                `Thank you ${loginUser.username}. Your token is ${userDataLogin.data}`
+            )
+        })
     };
+    
 
 
 
@@ -49,6 +62,16 @@ export default function App() {
             [name]: value
         });
     }
+
+        const handleLoginChange = (e) => {
+        const { value, name } = e.target;
+
+        loginSetUser({
+            ...loginUser,
+            [name]: value
+        });
+    }
+
 
     return (
         <div className="App">
@@ -89,16 +112,16 @@ export default function App() {
                         type='text'
                         name='username'
                         placeholder='Username'
-                        value={user.username}
-                        handleChange={handleChange}
+                        value={loginUser.username}
+                        handleChange={handleLoginChange}
                     />,
                     <Input
                         key={2}
                         type='password'
                         name='password'
                         placeholder='Password'
-                        value={user.password}
-                        handleChange={handleChange}
+                        value={loginUser.password}
+                        handleChange={handleLoginChange}
                     />
                 ]}
             />
